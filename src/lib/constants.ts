@@ -4,3 +4,8 @@ export enum ResolverTypeName {
   Subscription = "Subscription",
   Type = "Type",
 }
+
+export enum ServerType {
+  Apollo = "Apollo",
+  Yoga = "Yoga",
+}

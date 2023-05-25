@@ -35,7 +35,11 @@ import { createApolloServer } from "appsync-dev";
 const lambdaFolder = path.resolve(__dirname, "lambdas");
 const graphqlFolder = path.resolve(__dirname, "graphql");
 
-createApolloServer(4000, graphqlFolder, lambdaFolder);
+createApolloServer({
+  port: 4000,
+  graphqlDir: graphqlFolder,
+  lambdaDir: lambdaFolder,
+});
 ```
 
 or
@@ -47,7 +51,24 @@ import { createYogaServer } from "appsync-dev";
 const lambdaFolder = path.resolve(__dirname, "lambdas");
 const graphqlFolder = path.resolve(__dirname, "graphql");
 
-createYogaServer(4000, graphqlFolder, lambdaFolder);
+createYogaServer({
+  port: 4000,
+  graphqlDir: graphqlFolder,
+  lambdaDir: lambdaFolder,
+});
+```
+
+**Option props**
+
+```javascript
+interface ICreateServerProps {
+  port?: number; // default 4000
+  path?: string; // default /graphql
+  graphqlDir: string; // graphql schema file folder, required if you don't use typeDefs
+  lambdaDir: string; // lambda resolver file folder, required if you don't use resolvers
+  resolvers?: any; // custom resolvers
+  typeDefs?: any; // custom typeDefs
+}
 ```
 
 **Run with watch mode**
@@ -74,6 +95,7 @@ ts-node --project examples/tsconfig.json -r tsconfig-paths/register examples/ser
 
 - @aws_api_key
 - @aws_cognito_user_pools
+- @aws_subscribe
 
 ### Environment variables
 

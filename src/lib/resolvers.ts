@@ -2,13 +2,17 @@ import { AppSyncIdentity, AppSyncResolverEvent } from "aws-lambda";
 import chalk from "chalk";
 import glob from "glob";
 import { GraphQLError } from "graphql";
+import { type } from "os";
 import path from "path";
 
-import { ResolverTypeName } from "./constants";
+import { ResolverTypeName, ServerType } from "./constants";
 import { logger } from "./logger";
 
 export const mergeResolvers = async (
+  typeDefs: any,
   lambdaDir: string,
+  pubSub: any,
+  serverType: ServerType,
   globPattern?: string
 ): Promise<any> => {
   const files = glob.sync(
@@ -22,6 +26,27 @@ export const mergeResolvers = async (
   const mutationsResolvers: any = {};
   const subscriptionsResolvers: any = {};
   const typeResolvers: any = {};
+
+  const subscriptionFields =
+    typeDefs.definitions.find(
+      (d) => d.name.value === ResolverTypeName.Subscription
+    )?.fields || [];
+
+  subscriptionFields.forEach((field) => {
+    const typeName = field.name.value;
+
+    let subscribe;
+    if (serverType === ServerType.Apollo) {
+      subscribe = () => pubSub.asyncIterator(typeName);
+    } else {
+      subscribe = () => pubSub.subscribe(typeName);
+    }
+
+    subscriptionsResolvers[typeName] = {
+      subscribe,
+      resolve: (payload) => payload,
+    };
+  });
 
   await Promise.all(
     files.map(async (file) => {
@@ -42,7 +67,10 @@ export const mergeResolvers = async (
           mutationsResolvers[definition] = execHandler;
           break;
         case ResolverTypeName.Subscription:
-          subscriptionsResolvers[definition] = execHandler;
+          subscriptionsResolvers[definition] = {
+            ...subscriptionsResolvers[definition],
+            resolve: execHandler,
+          };
           break;
         case ResolverTypeName.Type:
           typeResolvers[definition] = {
@@ -86,9 +114,9 @@ const preHandlerFunction = (
   definition: string
 ): any => {
   return async (..._args: any) => {
-    const [parent, args, context] = _args;
+    const [parent, args, context, info] = _args;
     try {
-      const { req, identity, params } = context;
+      const { req, identity, params, pubSub, subscribeList = [] } = context;
 
       const event: AppSyncResolverEvent<typeof args, typeof parent> = {
         arguments: args,
@@ -105,6 +133,16 @@ const preHandlerFunction = (
         prev: null,
         stash: {},
       };
+
+      if (
+        type === ResolverTypeName.Mutation &&
+        subscribeList.includes(definition) &&
+        pubSub
+      ) {
+        const result = await handler(event, context, () => true);
+        pubSub.publish(definition, result);
+        return result;
+      }
 
       return handler(event, context, () => true);
     } catch (e: any) {
