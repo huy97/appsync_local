@@ -1,6 +1,6 @@
-import { GraphQLSchema, defaultFieldResolver, GraphQLError } from "graphql";
-import { mapSchema, getDirective, MapperKind } from "@graphql-tools/utils";
+import { getDirective, MapperKind, mapSchema } from "@graphql-tools/utils";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
+import { defaultFieldResolver, GraphQLError, GraphQLSchema } from "graphql";
 
 export function awsApiKeyDirective(
   directiveName: string
@@ -100,6 +100,28 @@ export function awsCognitoUserPoolDirective(
               return resolve(source, args, context, info);
             },
           };
+        }
+      },
+    });
+}
+
+export function awsSubscribeDirective(
+  directiveName: string,
+  subscribeList: any
+): (schema: GraphQLSchema) => GraphQLSchema {
+  return (schema) =>
+    mapSchema(schema, {
+      [MapperKind.OBJECT_FIELD]: (fieldConfig, ...args) => {
+        const awsSubscribeDirective = getDirective(
+          schema,
+          fieldConfig,
+          directiveName
+        )?.[0];
+
+        if (awsSubscribeDirective) {
+          const { mutations = [] } = awsSubscribeDirective;
+          subscribeList.push(...mutations);
+          return fieldConfig;
         }
       },
     });
