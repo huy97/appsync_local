@@ -30,6 +30,7 @@ yarn add --dev appsync-dev
 
 ```javascript
 // Apollo Server
+import path from "path";
 import { createApolloServer } from "appsync-dev";
 
 const lambdaFolder = path.resolve(__dirname, "lambdas");
@@ -46,6 +47,7 @@ or
 
 ```javascript
 // GraphQL Yoga Server
+import path from "path";
 import { createYogaServer } from "appsync-dev";
 
 const lambdaFolder = path.resolve(__dirname, "lambdas");
