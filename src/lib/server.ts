@@ -162,7 +162,7 @@ export const createYogaServer = async (
     callback
       ? callback
       : () => {
-          console.info(`Server is running on http://localhost:${port}/${path}`);
+          console.info(`Server is running on http://localhost:${port}${path}`);
         }
   );
 };
@@ -234,6 +234,6 @@ export const createApolloServer = async (
 
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
   callback
-    ? callback(`http://localhost:${port}/${path}`)
-    : console.log(`🚀 Server ready at http://localhost:${port}/${path}`);
+    ? callback(`http://localhost:${port}${path}`)
+    : console.log(`🚀 Server ready at http://localhost:${port}${path}`);
 };
