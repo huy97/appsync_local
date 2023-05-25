@@ -1,6 +1,6 @@
 {
   "name": "appsync-dev",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "AWS Appsync Locally with GraphQL Yoga or Apollo Server",
   "main": "dist/index.js",
   "scripts": {
@@ -13,6 +13,9 @@
     "type": "git",
     "url": "git+https://github.com/huy97/appsync_local.git"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "appsync",
     "graphql",
