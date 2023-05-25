@@ -1,8 +1,7 @@
 {
-  "name": "appsync-local",
-  "version": "1.0.0",
+  "name": "appsync-dev",
+  "version": "1.0.1",
   "description": "AWS Appsync Locally with GraphQL Yoga or Apollo Server",
-  "bin": "dist/index.js",
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "yarn build",
@@ -14,7 +13,21 @@
     "type": "git",
     "url": "git+https://github.com/huy97/appsync_local.git"
   },
-  "keywords": [],
+  "keywords": [
+    "appsync",
+    "graphql",
+    "aws",
+    "local",
+    "offline",
+    "server",
+    "lambda",
+    "yoga",
+    "apollo",
+    "how to run appsync locally",
+    "how to run appsync offline",
+    "how to run appsync with graphql yoga",
+    "how to run appsync with apollo server"
+  ],
   "author": "Huy Le Tien",
   "license": "MIT",
   "bugs": {

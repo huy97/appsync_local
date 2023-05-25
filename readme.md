@@ -1,4 +1,4 @@
-# AWS AppSync GraphQL API Local Mocking
+# AWS AppSync GraphQL API Locally Mocking
 
 ## Introduction
 
@@ -17,20 +17,20 @@
 ## Installation
 
 ```bash
-npm install appsync-local
+npm install --save-dev appsync-dev
 ```
 
 or
 
 ```bash
-yarn add appsync-local
+yarn add --dev appsync-dev
 ```
 
 ## Usage
 
 ```javascript
 // Apollo Server
-import { createApolloServer } from "appsync-local";
+import { createApolloServer } from "appsync-dev";
 
 const lambdaFolder = path.resolve(__dirname, "lambdas");
 const graphqlFolder = path.resolve(__dirname, "graphql");
@@ -41,13 +41,19 @@ createApolloServer(4000, graphqlFolder, lambdaFolder);
 or
 
 ```javascript
-// Apollo Server
-import { createYogaServer } from "appsync-local";
+// GraphQL Yoga Server
+import { createYogaServer } from "appsync-dev";
 
 const lambdaFolder = path.resolve(__dirname, "lambdas");
 const graphqlFolder = path.resolve(__dirname, "graphql");
 
 createYogaServer(4000, graphqlFolder, lambdaFolder);
+```
+
+**Run with watch mode**
+
+```bash
+tsc-watch --onSuccess \"ts-node --project ./dist/tsconfig.json -r tsconfig-paths/register ./dist/server.js\"
 ```
 
 ### Path alias
@@ -76,6 +82,7 @@ You can use environment variables in your lambda resolver by .env file
 ```javascript
 USER_POOL_ID=
 USER_POOL_CLIENT_ID=
+...
 ```
 
 ## Example
