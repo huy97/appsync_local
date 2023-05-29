@@ -17,13 +17,13 @@
 ## Installation
 
 ```bash
-npm install --save-dev appsync-dev
+npm install --save-dev appsync-dev-server
 ```
 
 or
 
 ```bash
-yarn add --dev appsync-dev
+yarn add --dev appsync-dev-server
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ yarn add --dev appsync-dev
 ```javascript
 // Apollo Server
 import path from "path";
-import { createApolloServer } from "appsync-dev";
+import { createApolloServer } from "appsync-dev-server";
 
 const lambdaFolder = path.resolve(__dirname, "lambdas");
 const graphqlFolder = path.resolve(__dirname, "graphql");
@@ -48,7 +48,7 @@ or
 ```javascript
 // GraphQL Yoga Server
 import path from "path";
-import { createYogaServer } from "appsync-dev";
+import { createYogaServer } from "appsync-dev-server";
 
 const lambdaFolder = path.resolve(__dirname, "lambdas");
 const graphqlFolder = path.resolve(__dirname, "graphql");

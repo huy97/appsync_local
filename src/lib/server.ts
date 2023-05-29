@@ -23,15 +23,63 @@ import {
 } from "./directives";
 import { mergeResolvers } from "./resolvers";
 
+/**
+ * An interface that defines the properties for creating a server.
+ *
+ * @interface
+ */
 export interface ICreateServerProps {
+  /**
+   * The port number to use for the server.
+   *
+   * @type {number}
+   */
   port?: number;
+
+  /**
+   * The path to use for the server.
+   *
+   * @type {string}
+   */
   path?: string;
+
+  /**
+   * The directory containing the GraphQL schema files.
+   *
+   * @type {string}
+   */
   graphqlDir?: string;
+
+  /**
+   * The directory containing the resolver files.
+   *
+   * @type {string}
+   */
   lambdaDir?: string;
+
+  /**
+   * The resolvers to use for the server.
+   *
+   * @type {any}
+   */
   resolvers?: any;
+
+  /**
+   * The type definitions to use for the server.
+   *
+   * @type {any}
+   */
   typeDefs?: any;
+
+  /**
+   * An optional glob pattern to filter the resolver files.
+   *
+   * @type {string}
+   */
+  resolverFilePattern?: string;
 }
 
+// Default directive type definitions
 const directiveTypeDefs = `
 scalar AWSDate
 scalar AWSTime
@@ -60,7 +108,7 @@ directive @aws_cognito_user_pools(
 
 const subscribeList = [];
 
-const wsServer = (httpServer, path?: string) =>
+const wsServer = (httpServer: any, path?: string) =>
   new WebSocketServer({
     server: httpServer,
     path,
@@ -74,9 +122,13 @@ const appliedDirectives = (schema) => {
 };
 
 /**
- * Create an Yoga Server
- * @param props ICreateServerProps
- * @param callback
+ * Creates an Yoga server with the specified configuration.
+ *
+ * @async
+ * @function
+ * @param {ICreateServerProps} - An object containing the properties for creating the server.
+ * @param {Function} [callback] - An optional callback function to be called after the server is created.
+ * @returns {Promise<any>} - A promise that resolves with the created server.
  */
 export const createYogaServer = async (
   {
@@ -86,6 +138,7 @@ export const createYogaServer = async (
     lambdaDir,
     resolvers,
     typeDefs,
+    resolverFilePattern,
   }: ICreateServerProps,
   callback?: () => void
 ): Promise<any> => {
@@ -99,7 +152,13 @@ export const createYogaServer = async (
     typeDefs || mergeTypeDefs([...typesArray, directiveTypeDefs]);
   const _resolvers =
     resolvers ||
-    (await mergeResolvers(_typeDefs, lambdaDir, pubSub, ServerType.Yoga));
+    (await mergeResolvers(
+      _typeDefs,
+      lambdaDir,
+      pubSub,
+      ServerType.Yoga,
+      resolverFilePattern
+    ));
 
   let schema = makeExecutableSchema({
     typeDefs: _typeDefs,
@@ -167,6 +226,15 @@ export const createYogaServer = async (
   );
 };
 
+/**
+ * Creates an Apollo server with the specified configuration.
+ *
+ * @async
+ * @function
+ * @param {ICreateServerProps} - An object containing the properties for creating the server.
+ * @param {Function} [callback] - An optional callback function to be called after the server is created.
+ * @returns {Promise<any>} - A promise that resolves with the created server.
+ */
 export const createApolloServer = async (
   {
     port = 4000,
@@ -175,6 +243,7 @@ export const createApolloServer = async (
     lambdaDir,
     typeDefs,
     resolvers,
+    resolverFilePattern,
   }: ICreateServerProps,
   callback?: (url: string) => void
 ): Promise<any> => {
@@ -188,7 +257,13 @@ export const createApolloServer = async (
     typeDefs || mergeTypeDefs([...typesArray, directiveTypeDefs]);
   const _resolvers =
     resolvers ||
-    (await mergeResolvers(_typeDefs, lambdaDir, pubSub, ServerType.Apollo));
+    (await mergeResolvers(
+      _typeDefs,
+      lambdaDir,
+      pubSub,
+      ServerType.Apollo,
+      resolverFilePattern
+    ));
 
   let schema = makeExecutableSchema({
     typeDefs: _typeDefs,

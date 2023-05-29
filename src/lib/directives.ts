@@ -2,6 +2,13 @@ import { getDirective, MapperKind, mapSchema } from "@graphql-tools/utils";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 import { defaultFieldResolver, GraphQLError, GraphQLSchema } from "graphql";
 
+/**
+ * Creates an AWS Api Key directive with the specified name.
+ *
+ * @function
+ * @param {string} directiveName - The name of the directive to be created.
+ * @returns {Function} - A function that takes a GraphQL schema and returns the modified schema with the new directive.
+ */
 export function awsApiKeyDirective(
   directiveName: string
 ): (schema: GraphQLSchema) => GraphQLSchema {
@@ -35,6 +42,13 @@ export function awsApiKeyDirective(
     });
 }
 
+/**
+ * Creates an AWS Cognito User Pool directive with the specified name.
+ *
+ * @function
+ * @param {string} directiveName - The name of the directive to be created.
+ * @returns {Function} - A function that takes a GraphQL schema and returns the modified schema with the new directive.
+ */
 export function awsCognitoUserPoolDirective(
   directiveName: string
 ): (schema: GraphQLSchema) => GraphQLSchema {
@@ -105,6 +119,13 @@ export function awsCognitoUserPoolDirective(
     });
 }
 
+/**
+ * Creates an AWS Subscription directive with the specified name.
+ *
+ * @function
+ * @param {string} directiveName - The name of the directive to be created.
+ * @returns {Function} - A function that takes a GraphQL schema and returns the modified schema with the new directive.
+ */
 export function awsSubscribeDirective(
   directiveName: string,
   subscribeList: any

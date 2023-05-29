@@ -2,12 +2,22 @@ import { AppSyncIdentity, AppSyncResolverEvent } from "aws-lambda";
 import chalk from "chalk";
 import glob from "glob";
 import { GraphQLError } from "graphql";
-import { type } from "os";
 import path from "path";
 
 import { ResolverTypeName, ServerType } from "./constants";
 import { logger } from "./logger";
 
+/**
+ * A function that merges resolvers from multiple files into a single resolver object.
+ *
+ * @async
+ * @param {any} typeDefs - The type definitions for the resolvers.
+ * @param {string} lambdaDir - The directory containing the resolver files.
+ * @param {any} pubSub - The PubSub instance to use for subscriptions.
+ * @param {ServerType} serverType - The type of server being used.
+ * @param {string} [globPattern] - An optional glob pattern to filter the resolver files.
+ * @returns {Promise<object>} - A promise that resolves with the merged resolver object.
+ */
 export const mergeResolvers = async (
   typeDefs: any,
   lambdaDir: string,
@@ -108,6 +118,13 @@ export const mergeResolvers = async (
   return resolvers;
 };
 
+/**
+A function that prepares a handler function for use in a specific context.
+@param {any} handler - The handler function to be prepared.
+@param {string} type - The type of the handler function.
+@param {string} definition - The definition of the handler function.
+@returns {Promise<function>}
+*/
 const preHandlerFunction = (
   handler: any,
   type: string,
