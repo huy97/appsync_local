@@ -1,6 +1,6 @@
 {
   "name": "appsync-dev-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "AWS Appsync Locally with GraphQL Yoga or Apollo Server",
   "main": "dist/index.js",
   "scripts": {
@@ -55,6 +55,7 @@
     "express": "^4.18.2",
     "glob": "~8.1.0",
     "graphql": "^16.6.0",
+    "graphql-fields-list": "^2.2.4",
     "graphql-subscriptions": "^2.0.0",
     "graphql-ws": "^5.13.1",
     "graphql-yoga": "^3.9.1",
