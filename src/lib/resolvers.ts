@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AppSyncIdentity, AppSyncResolverEvent } from "aws-lambda";
 import chalk from "chalk";
 import glob from "glob";
 import { GraphQLError } from "graphql";
+import { fieldsList } from "graphql-fields-list";
 import path from "path";
 
 import { ResolverTypeName, ServerType } from "./constants";
@@ -140,11 +142,12 @@ const preHandlerFunction = (
         source: parent,
         request: req,
         info: {
-          ...params,
-          selectionSetList: [],
-          selectionSetGraphQL: "",
-          fieldName: params?.fieldName || definition,
-          parentTypeName: params?.parentTypeName || type,
+          selectionSetList: fieldsList(info),
+          selectionSetGraphQL: params?.query || "",
+          fieldName: params?.fieldName || info?.fieldName || definition,
+          parentTypeName:
+            params?.parentTypeName || info?.parentType?.name || type,
+          variables: info?.variableValues || {},
         },
         identity: identity as AppSyncIdentity,
         prev: null,

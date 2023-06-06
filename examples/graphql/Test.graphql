@@ -1,5 +1,10 @@
+type Test {
+  a: String
+  b: String
+}
+
 type Query {
-  test: String @aws_cognito_user_pools(cognito_groups: ["SYSTEM_ADMIN"])
+  test(input: String): Test
 }
 
 type Mutation {
